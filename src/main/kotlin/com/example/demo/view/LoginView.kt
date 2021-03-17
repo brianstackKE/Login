@@ -1,9 +1,11 @@
 package com.example.demo.view
 
+import com.example.demo.app.ThemeController
 import com.example.demo.controller.LoginController
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
 import javafx.geometry.Pos
+import javafx.scene.control.PasswordField
 import javafx.scene.image.Image
 import javafx.scene.paint.Color
 import javafx.scene.text.FontWeight
@@ -14,21 +16,26 @@ class LoginView : View("Login") {
     val username = model.bind { SimpleStringProperty() }
     val password = model.bind { SimpleStringProperty() }
     val loginController: LoginController by inject()
+    val settings: ThemeController by inject()
 
     override val root = vbox {
         setPrefSize(400.0, 600.0)
         style{
-            backgroundColor += Color.BLANCHEDALMOND
+//            backgroundColor += Color.BLANCHEDALMOND
         }
 
         fieldset("Enter Credentials Here") {
             hbox {
-                alignment  = Pos.TOP_RIGHT
-                button("light"){
-                    //enter light mode
-                }
-                button("dark"){
-                    //enter dark mode
+                alignment = Pos.TOP_RIGHT
+
+                togglegroup {
+                    // One radio button for each theme, with their value set as the theme
+                    settings.themes.forEach { theme ->
+                        radiobutton(theme.simpleName, getToggleGroup(), theme)
+                    }
+
+                    // The toggle group value is bound to the activeThemeProperty
+                    bind(settings.activeThemeProperty)
                 }
             }
             hbox {
@@ -49,6 +56,7 @@ class LoginView : View("Login") {
                 alignment = Pos.CENTER
                 label("password")
                 passwordfield(password).required()
+
             }
             button("Log in") {
                 enableWhen(model.valid)
