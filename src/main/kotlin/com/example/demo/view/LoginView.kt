@@ -20,9 +20,6 @@ class LoginView : View("Login") {
 
     override val root = vbox {
         setPrefSize(400.0, 600.0)
-        style{
-//            backgroundColor += Color.BLANCHEDALMOND
-        }
 
         fieldset("Enter Credentials Here") {
             hbox {
@@ -58,13 +55,16 @@ class LoginView : View("Login") {
                 passwordfield(password).required()
 
             }
-            button("Log in") {
-                enableWhen(model.valid)
-                isDefaultButton = true
-                useMaxWidth = true
-                action {
-                    runAsyncWithProgress {
-                        loginController.login(username.value, password.value)
+            hbox{
+                alignment = Pos.CENTER
+
+                button("Log in") {
+                    enableWhen(model.valid)
+                    setPrefSize(50.0,50.0)
+                    action {
+                        runAsyncWithProgress {
+                            loginController.login(username.value, password.value)
+                        }
                     }
                 }
             }
